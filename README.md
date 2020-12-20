@@ -13,6 +13,11 @@ chmod +x hpc_pfam_search/hpc_pfam_search.pl
 ./hpc_pfam_search/hpc_pfam_search.pl -h
 ```
 
+`hpc_pfam_search` also depends on [Moose](https://metacpan.org/pod/Moose) and [BioPerl](https://metacpan.org/pod/BioPerl). You can install these packages in Ubuntu/Debian using the following command:
+```
+sudo apt install libmoose-perl bioperl
+```
+
 ## Benchmark
 
 Benchmark comparing `hpc_pfam_search` to regular `pfam_scan` and [`pfam_search`](https://github.com/Ecogenomics/pfam_search). The commands were executed using an input with 1,000 sequences and 32 cpu cores. Execution times were measured with [hyperfine](https://github.com/sharkdp/hyperfine).
