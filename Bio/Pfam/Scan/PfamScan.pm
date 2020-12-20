@@ -551,7 +551,7 @@ EOF_license
     : '';
 
   unshift @{ $self->{_header} },
-    "# pfam_scan.pl, $v run at " . scalar(localtime) . "\n#\n";
+    "# hpc_pfam_search.pl, $v run at " . scalar(localtime) . "\n#\n";
 
 
 }

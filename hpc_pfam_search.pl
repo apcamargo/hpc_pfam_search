@@ -1,7 +1,5 @@
 #!/usr/bin/env perl
 
-# $Id: pfam_scan.pl 7758 2013-10-15 11:02:13Z jm14 $
-
 use strict;
 use warnings;
 
@@ -157,9 +155,9 @@ exit;
 sub help {
   print STDERR <<EOF;
 
-pfam_scan.pl: search a FASTA file against a library of Pfam HMMs
+hpc_pfam_search.pl: search a FASTA file against a library of Pfam HMMs
 
-Usage: pfam_scan.pl -fasta <fasta_file> -dir <directory location of Pfam files>
+Usage: hpc_pfam_search.pl -fasta <fasta_file> -dir <directory location of Pfam files>
 
 Additonal options:
 
@@ -191,7 +189,7 @@ Additonal options:
 
   For more help, check the perldoc:
 
-      shell\% perldoc pfam_scan.pl
+      shell\% perldoc hpc_pfam_search.pl
 
 EOF
   exit;
@@ -202,11 +200,11 @@ EOF
 
 =head1 NAME
 
-pfam_scan.pl -- Search protein sequences against the Pfam HMM library
+hpc_pfam_search.pl -- Search protein sequences against the Pfam HMM library
 
 =head1 SYNOPSIS
 
-pfam_scan.pl [options] -fasta <fasta_file> -dir <Pfam_data_file_dir>
+hpc_pfam_search.pl [options] -fasta <fasta_file> -dir <Pfam_data_file_dir>
 
 =head1 OPTIONS
 
@@ -289,7 +287,7 @@ mandatory. You cannot specify both an E-value and bits score threshold.
 
 =head1 OVERVIEW
 
-C<pfam_scan.pl> is a script for searching one or more protein sequences against the
+C<hpc_pfam_search.pl> is a script for searching one or more protein sequences against the
 library of HMMs from Pfam. It requires a local copy of the Pfam data files, which
 can be obtained from the Pfam FTP area:
 
