@@ -1,6 +1,17 @@
 # hpc_pfam_search
 
-Fork of `pfam_scan` that uses [`hpc_hmmsearch`](https://github.com/Larofeticus/hpc_hmmsearch) instead of `hmmsearch` to greatly reduce the execution time.
+Fork of `pfam_scan` that uses `hpc_hmmsearch` instead of `hmmscan` to greatly reduce the execution time when using multiple cores.
+
+## Installation
+
+To use `hpc_pfam_search` you need to have [`hpc_hmmsearch`](https://github.com/Larofeticus/hpc_hmmsearch) in your `PATH` and then add the Pfam modules included in this repository to your `PERL5LIB`:
+
+```
+git clone https://github.com/apcamargo/hpc_pfam_search.git
+export PERL5LIB=hpc_pfam_search:$PERL5LIB
+chmod +x hpc_pfam_search/hpc_pfam_search.pl
+./hpc_pfam_search/hpc_pfam_search.pl -h
+```
 
 ## Benchmark
 
