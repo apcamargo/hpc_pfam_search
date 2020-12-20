@@ -12,7 +12,7 @@ extends 'Bio::Pfam::HMM::HMMMatch';
 subtype 'Domain'
     => as 'Int'
     => where { $_ > 0 };
-              
+
 #coerce 'Domain'
 #  => from 'Str'
 #    => via {
@@ -22,8 +22,8 @@ subtype 'Domain'
 #      }
 #      return $d;
 #    };
-#    
-  
+#
+
 #subtype 'proteinCoos'
 #  => as 'Int'
 #  => where { $_ > 0 && $_ < 100000 }
@@ -52,7 +52,7 @@ has 'seqTo' => (
   required => 1
 );
 
-#has 'indEvalue' => (  
+#has 'indEvalue' => (
 #  isa => 'evalue',
 #  is  => 'rw',
 #  required => 1,

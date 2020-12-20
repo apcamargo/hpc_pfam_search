@@ -31,17 +31,17 @@ Authors: Rob Finn (rdf@sanger.ac.uk), John Tate (jt6@sanger.ac.uk)
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  or see the on-line version at http://www.gnu.org/copyleft/gpl.txt
- 
+
 =cut
 
 use strict;
@@ -59,12 +59,12 @@ use Bio::Pfam::HMM::HMM;
 =cut
 sub readHMM {
   my ($this, $hmm) = @_;
-  
+
   unless($hmm){
-    confess("No HMM passed in!"); 
+    confess("No HMM passed in!");
   }
   chomp($hmm);
-  
+
   my @input;
   if(ref($hmm) eq 'GLOB'){
     @input = <$hmm>;
@@ -73,12 +73,12 @@ sub readHMM {
     open(HMM, $hmm) || confess("Could not open $hmm:[$!]");
     @input = <HMM>;
   }else{
-    @input = split(/\n/, $hmm); 
+    @input = split(/\n/, $hmm);
   }
-  
-  
-  
-  #Parse the header section!  
+
+
+
+  #Parse the header section!
   #HMMER3/f [3.1b1 | May 2013]
   #NAME  SEED
   #ACC   PF000001.1
@@ -100,37 +100,37 @@ sub readHMM {
 
   #To add GA, TC, NC, CKSUM, DESC
   my($objHash);
-  my $i =0; 
-  foreach ( @input ){  
+  my $i =0;
+  foreach ( @input ){
     if(my ($version) = $_ =~ /(HMMER3.*)/){
       $objHash->{version} = $version;
     }elsif(my ($acc) = $_ =~ /^ACC\s+(PF\d+\.\d+)$/){
       $objHash->{accession} = $acc;
-    }elsif(/NAME\s+(\S+)/){ 
+    }elsif(/NAME\s+(\S+)/){
       $objHash->{name} =  $1 ;
-    }elsif(/DESC\s+(.*)/){ 
+    }elsif(/DESC\s+(.*)/){
       $objHash->{description} =   $1 ;
     }elsif(my ($length) = $_ =~ /^LENG\s+(\d+)/){
       $objHash->{length} = $length;
     }elsif( my ($alpha) = $_ =~ /^ALPH\s+(\S+)/){
       $objHash->{alpha} = $alpha;
     }elsif( my ($rf) = $_ =~ /^RF\s+(no|yes)/){
-      $objHash->{rf} = ($rf eq "no") ? 0 : 1; 
+      $objHash->{rf} = ($rf eq "no") ? 0 : 1;
     }elsif( my ($mm) = $_ =~ /^MM\s+(no|yes)/){
-      $objHash->{mm} = ($mm eq "no") ? 0 : 1; 
+      $objHash->{mm} = ($mm eq "no") ? 0 : 1;
     }elsif( my ($cons) = $_ =~ /^CONS\s+(no|yes)/){
-      $objHash->{cons} = ($cons eq "no") ? 0 : 1; 
+      $objHash->{cons} = ($cons eq "no") ? 0 : 1;
     }elsif(my ($cs) = $_ =~ /^CS\s+(no|yes)/ ){
-      $objHash->{cs} =  ($cs eq "no") ? 0 : 1; 
+      $objHash->{cs} =  ($cs eq "no") ? 0 : 1;
     }elsif(my ($map) = $_ =~ /^MAP\s+(no|yes)/){
-      $objHash->{map} = ($map eq "no") ? 0 : 1; 
+      $objHash->{map} = ($map eq "no") ? 0 : 1;
     }elsif(my ($date) = $_ =~ /^DATE\s+(.*)/){
-      $objHash->{date} =  $date; 
+      $objHash->{date} =  $date;
     }elsif(my ($sm) = $_ =~ /^SM\s+(.*)/){
-      $objHash->{searchMethod} =  $sm; 
-    
+      $objHash->{searchMethod} =  $sm;
+
     }elsif(my ($options, $hmmName, $alignName) = $input[$i] =~ /^BM.*hmmbuild(.*)? (\S+) (\S+)$/){
-      $objHash->{buildLine} = { cmd     => 'hmmbuild', 
+      $objHash->{buildLine} = { cmd     => 'hmmbuild',
                                 options => $options,
                                 name    => $hmmName,
                                 align   => $alignName } ;
@@ -141,13 +141,13 @@ sub readHMM {
       $objHash->{effn} =  $effn ;
     }elsif( my ( $cksum ) = $_ =~ /^CKSUM (\d+)/){
       $objHash->{cksum} = $cksum ;
-    }elsif(/GA\s+(\S+)\s+(\S+)\;/){ 
+    }elsif(/GA\s+(\S+)\s+(\S+)\;/){
       $objHash->{seqGA} = $1;
       $objHash->{domGA} = $2;
-    }elsif(/TC\s+(\S+)\s+(\S+)\;/){ 
+    }elsif(/TC\s+(\S+)\s+(\S+)\;/){
       $objHash->{seqTC} = $1;
       $objHash->{domTC} = $2;
-    }elsif(/NC\s+(\S+)\s+(\S+)\;/){ 
+    }elsif(/NC\s+(\S+)\s+(\S+)\;/){
       $objHash->{seqNC} = $1;
       $objHash->{domNC} = $2;
     }elsif( my ($msv_mu, $msv_lambda ) = $_ =~ /^STATS LOCAL MSV\s+(\S+)\s+(0\.\d+)/){
@@ -159,16 +159,16 @@ sub readHMM {
     }elsif( $_ =~ /^HMM\s+A/){
       last;
     }else{
-      confess("Got a bad HMM header line:$input[$i]\n"); 
+      confess("Got a bad HMM header line:$input[$i]\n");
     }
     $i++;
   }
 
   my $hmmObj = Bio::Pfam::HMM::HMM->new($objHash);
-  
-  
+
+
   #The next two lines are stand lines
-  #HMM          A        C        D        E        F        G        H        I        K        L        M        N        P        Q        R        S        T        V        W        Y   
+  #HMM          A        C        D        E        F        G        H        I        K        L        M        N        P        Q        R        S        T        V        W        Y
   #          m->m     m->i     m->d     i->m     i->i     d->m     d->d
   $i++;
 
@@ -181,15 +181,15 @@ sub readHMM {
     if($line == 0 ){
       @c = @l[2..21];
     }elsif( $line == 1){
-      @c = @l[1..20]; 
+      @c = @l[1..20];
     }elsif($line == 2){
-      @c = @l[1..7];  
+      @c = @l[1..7];
     }
     $hmmObj->compLines->[$line] = \@c;
   }
-  
 
-  
+
+
   for(my $pos = 0; $pos < $hmmObj->length; $pos++){
     #There are three lines per position - match emission line, insert emission line, state transition line
     for( my $line = 0; $line <=2; $line++){
@@ -200,47 +200,47 @@ sub readHMM {
         @e = @l[2..21];
         if($hmmObj->map){
            $hmmObj->mapPos->[$pos] = $l[22];
-        } 
+        }
       }elsif( $line == 1){
-        @e = @l[1..20]; 
+        @e = @l[1..20];
       }elsif($line == 2){
-        @e = @l[1..7];  
+        @e = @l[1..7];
       }
       $hmmObj->emissionLines->[$pos]->[$line] = \@e;
     }
   }
-  
+
   if($input[$i++] =~ /^\/\/$/){
-    confess("Expected file terminator //, but got $input[$i]\n"); 
+    confess("Expected file terminator //, but got $input[$i]\n");
   }
- 
-  #No veryifiy that we have COMP line and the the number of emissionlines is equivalent to length 
+
+  #No veryifiy that we have COMP line and the the number of emissionlines is equivalent to length
   unless(scalar( @{ $hmmObj->emissionLines } ) == $hmmObj->length){
     confess("Number of emssionLines does not match the length of the model, got ".scalar( @{ $hmmObj->emissionLines} ).
-        " expected ".$hmmObj->length);  
+        " expected ".$hmmObj->length);
   }
-  
+
   unless($hmmObj->compLines){
-    confess("No compLine set on HMM"); 
+    confess("No compLine set on HMM");
   }
-  
+
   if($hmmObj->map){
     unless(scalar(@{$hmmObj->mapPos}) == $hmmObj->length ){
-      confess("HMM object had map set, but the number of map positions does not match the length of the HMM");  
-    }; 
+      confess("HMM object had map set, but the number of map positions does not match the length of the HMM");
+    };
   }
-  return $hmmObj;  
+  return $hmmObj;
 }
 
 
 
 sub writeHMM {
   my ($this, $hmm, $hmmObj) = @_;
-  
+
   unless($hmm){
-    confess("No HMM out file passed in!"); 
+    confess("No HMM out file passed in!");
   }
-  
+
   unless(ref($hmm) eq 'GLOB'){
     my $hmmFile = $hmm;
     $hmm = undef;
@@ -266,35 +266,35 @@ sub writeHMM {
   printf $hmm ("%-5s %.2f %.2f;\n", "GA", $hmmObj->seqGA, $hmmObj->domGA) if(defined($hmmObj->seqGA));
   printf $hmm ("%-5s %.2f %.2f;\n", "TC", $hmmObj->seqTC, $hmmObj->domTC) if(defined($hmmObj->seqTC));
   printf $hmm ("%-5s %.2f %.2f;\n", "NC", $hmmObj->seqNC, $hmmObj->domNC) if(defined($hmmObj->seqNC));
-  
+
   printf $hmm ("%-5s %s %-9s %.4f  %.5f\n", "STATS", "LOCAL", "MSV", $hmmObj->msvStats->{mu},  $hmmObj->msvStats->{lambda});
   printf $hmm ("%-5s %s %-9s %.4f  %.5f\n", "STATS", "LOCAL", "VITERBI", $hmmObj->viterbiStats->{mu},  $hmmObj->viterbiStats->{lambda});
   printf $hmm ("%-5s %s %-9s %.4f  %.5f\n", "STATS", "LOCAL", "FORWARD", $hmmObj->forwardStats->{tau},  $hmmObj->forwardStats->{lambda});
-  
+
   print $hmm <<EOF;
-HMM          A        C        D        E        F        G        H        I        K        L        M        N        P        Q        R        S        T        V        W        Y   
+HMM          A        C        D        E        F        G        H        I        K        L        M        N        P        Q        R        S        T        V        W        Y
             m->m     m->i     m->d     i->m     i->i     d->m     d->d
 EOF
-  
+
   printf $hmm ("%7s ", "COMPO");
    foreach my $s (@{$hmmObj->compLines->[0]}){
        printf $hmm ("  %7s", $s);
     }
     print $hmm "\n";
-     
+
     print $hmm (" " x 8);
     foreach my $s (@{$hmmObj->compLines->[1]}){
        printf $hmm ("  %7s", $s);
     }
     print $hmm "\n";
-    
+
     print $hmm (" " x 8);
     foreach my $s (@{$hmmObj->compLines->[2]}){
        printf $hmm ("  %7s", $s);
     }
     print $hmm "\n";
-    
-  
+
+
   my $pos = 1;
   foreach my $el (@{ $hmmObj->emissionLines }){
     printf $hmm ("%7s ", $pos);
@@ -302,10 +302,10 @@ EOF
        printf $hmm ("  %7s", $s);
     }
     if($hmmObj->map){
-      printf $hmm ("%7s - -\n", $hmmObj->mapPos->[$pos - 1]);  
+      printf $hmm ("%7s - -\n", $hmmObj->mapPos->[$pos - 1]);
     }else{
       print $hmm "\n";
-    } 
+    }
     print $hmm (" " x 8);
     foreach my $s (@{$el->[1]}){
        printf $hmm ("  %7s", $s);
@@ -315,10 +315,10 @@ EOF
     foreach my $s (@{$el->[2]}){
        printf $hmm ("  %7s", $s);
     }
-    print $hmm "\n"; 
-    $pos++; 
+    print $hmm "\n";
+    $pos++;
   }
-  
+
 
   print $hmm "//\n";
 }

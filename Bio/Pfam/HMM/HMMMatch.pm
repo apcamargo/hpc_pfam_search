@@ -14,7 +14,7 @@ subtype 'evalue'
   => message { "$_ does not look like an evalue" };
 
 has 'evalue' => (
-  isa       => 'evalue', 
+  isa       => 'evalue',
   is        => 'rw',
   required  => 1
 );

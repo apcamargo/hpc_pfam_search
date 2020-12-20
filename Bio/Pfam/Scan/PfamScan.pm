@@ -138,14 +138,14 @@ sub search {
     my @params;
     if ( $self->{_cpu} ) {
       @params = (
-        'hmmsearch', '--notextw', '--cpu', $self->{_cpu}, @hmmscan_cut_off,
+        'hpc_hmmsearch', '--notextw', '--cpu', $self->{_cpu}, @hmmscan_cut_off,
         $self->{_dir} . '/' . $hmmlib,
         $self->{_fasta}
       );
     }
     else {
       @params = (
-        'hmmsearch', '--notextw', @hmmscan_cut_off, $self->{_dir} . '/' . $hmmlib,
+        'hpc_hmmsearch', '--notextw', @hmmscan_cut_off, $self->{_dir} . '/' . $hmmlib,
         $self->{_fasta}
       );
 
@@ -526,10 +526,10 @@ sub _build_header {
 
   unshift @{ $self->{_header} }, <<EOF_license;
 # Copyright (c) 2009 Genome Research Ltd
-# Freely distributed under the GNU 
+# Freely distributed under the GNU
 # General Public License
 #
-# Authors: Jaina Mistry (jm14\@sanger.ac.uk), John Tate (jt6\@sanger.ac.uk), 
+# Authors: Jaina Mistry (jm14\@sanger.ac.uk), John Tate (jt6\@sanger.ac.uk),
 #          Rob Finn (rdf\@sanger.ac.uk)
 #
 # This is free software; you can redistribute it and/or modify it under
@@ -541,7 +541,7 @@ sub _build_header {
 # details.
 #
 # You should have received a copy of the GNU General Public License along with
-# this program. If not, see <http://www.gnu.org/licenses/>. 
+# this program. If not, see <http://www.gnu.org/licenses/>.
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 EOF_license
 
@@ -552,8 +552,8 @@ EOF_license
 
   unshift @{ $self->{_header} },
     "# pfam_scan.pl, $v run at " . scalar(localtime) . "\n#\n";
-    
-    
+
+
 }
 
 #-------------------------------------------------------------------------------

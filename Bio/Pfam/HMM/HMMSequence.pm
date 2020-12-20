@@ -56,14 +56,14 @@ has hmmUnits => (
 #-------------------------------------------------------------------------------
 =head1 Subroutines
 
-=head2 addHMMUnit 
+=head2 addHMMUnit
 
   Title    : addHMMUnit
-  Usage    : $hmmseq->addHMMUnit($hmmUnit) 
+  Usage    : $hmmseq->addHMMUnit($hmmUnit)
   Function : Adds a hmmUnit to a sequence. It checks that the variable passed in is a Bio::Pfam::HMM::HMMUnit oject
   Args     : A Bio::Pfam::HMM::HMMUnit oject
   Returns  : Nothing
-  
+
 =cut
 
 sub addHMMUnit {
@@ -71,7 +71,7 @@ sub addHMMUnit {
   if($hmmUnit->isa("Bio::Pfam::HMM::HMMUnit")){
     push(@{$self->hmmUnits}, $hmmUnit);
   }else{
-    warn "$hmmUnit is not a Bio::Pfam::HMM::HMMUnit, not added\n"; 
+    warn "$hmmUnit is not a Bio::Pfam::HMM::HMMUnit, not added\n";
   }
 }
 

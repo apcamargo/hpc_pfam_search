@@ -8,13 +8,13 @@ use warnings;
 use Bio::Pfam::Scan::PfamScan;
 use Getopt::Long;
 
-my $VERSION = "1.5"; 
+my $VERSION = "1.5";
 
 #-------------------------------------------------------------------------------
 
 # get the user options
-my ( $outfile, $e_seq, $e_dom, $b_seq, $b_dom, $dir, 
-     $clan_overlap, $fasta, $align, $help, $as, $pfamB, 
+my ( $outfile, $e_seq, $e_dom, $b_seq, $b_dom, $dir,
+     $clan_overlap, $fasta, $align, $help, $as, $pfamB,
      $json, $only_pfamB, $cpu, $translate );
 GetOptions( 'help'         => \$help,
             'outfile=s'    => \$outfile,
@@ -66,7 +66,7 @@ die qq(FATAL: can't find file "$fasta")
 
 foreach my $hmmlib ( @hmmlib ) {
   die qq(FATAL: can't find "$hmmlib" and/or "$hmmlib" binaries and/or "$hmmlib.dat" file in "$dir")
-    unless ( -s "$dir/$hmmlib"     and 
+    unless ( -s "$dir/$hmmlib"     and
              -s "$dir/$hmmlib.h3f" and
              -s "$dir/$hmmlib.h3i" and
              -s "$dir/$hmmlib.h3m" and
@@ -75,11 +75,11 @@ foreach my $hmmlib ( @hmmlib ) {
 }
 
 die qq(FATAL: can't use E-value or bit score threshold with Pfam-B searches; Pfam-B searches use a default cut_off of 0.001)
-  if ( ( $e_seq or $e_dom or $b_seq or $b_dom ) and not $pfamA ); 
+  if ( ( $e_seq or $e_dom or $b_seq or $b_dom ) and not $pfamA );
 
 die qq(FATAL: can't use E-value and bit score threshold together)
-  if ( ( $e_seq and ( $b_seq or $b_dom ) ) or 
-       ( $b_seq and ( $e_seq or $e_dom ) ) or 
+  if ( ( $e_seq and ( $b_seq or $b_dom ) ) or
+       ( $b_seq and ( $e_seq or $e_dom ) ) or
        ( $b_dom and $e_dom ) );
 
 die qq(FATAL: output file "$outfile" already exists)
@@ -171,7 +171,7 @@ Additonal options:
   -e_dom <n>        : specify hmmscan evalue domain cutoff for Pfam-A searches (default Pfam defined)
   -b_seq <n>        : specify hmmscan bit score sequence cutoff for Pfam-A searches (default Pfam defined)
   -b_dom <n>        : specify hmmscan bit score domain cutoff for Pfam-A searches (default Pfam defined)
-  -pfamB            : search against Pfam-B* HMMs (uses E-value sequence and domain cutoff 0.001),  
+  -pfamB            : search against Pfam-B* HMMs (uses E-value sequence and domain cutoff 0.001),
                       in addition to searching Pfam-A HMMs
   -only_pfamB       : search against Pfam-B* HMMs only (uses E-value sequence and domain cutoff 0.001)
   -as               : predict active site residues for Pfam-A matches
@@ -180,9 +180,9 @@ Additonal options:
                       module
   -cpu <n>          : number of parallel CPU workers to use for multithreads (default all)
   -translate [mode] : treat sequence as DNA and perform six-frame translation before searching. If the
-                      optional value "mode" is given it must be either "all", to translate everything 
-                      and produce no individual ORFs, or "orf", to report only ORFs with length greater 
-                      than 20. If "-translate" is used without a "mode" value, the default is to 
+                      optional value "mode" is given it must be either "all", to translate everything
+                      and produce no individual ORFs, or "orf", to report only ORFs with length greater
+                      than 20. If "-translate" is used without a "mode" value, the default is to
                       report ORFs (default no translation)
 
   * Please note that the Pfam-B HMMs are of much lower quality than
@@ -228,7 +228,7 @@ Write output to C<output_file> [default: STDOUT]
 
 Sequence E-value cut-off [default: use Pfam GA cutoff]
 
-=item B<-e_dom> 
+=item B<-e_dom>
 
 Domain E-value cut-off [default: use Pfam GA cutoff]
 
@@ -284,13 +284,13 @@ Display help message
 
 =back
 
-The input must be a FASTA-format file. The C<-fasta> and C<-dir> options are 
-mandatory. You cannot specify both an E-value and bits score threshold.  
+The input must be a FASTA-format file. The C<-fasta> and C<-dir> options are
+mandatory. You cannot specify both an E-value and bits score threshold.
 
 =head1 OVERVIEW
 
 C<pfam_scan.pl> is a script for searching one or more protein sequences against the
-library of HMMs from Pfam. It requires a local copy of the Pfam data files, which 
+library of HMMs from Pfam. It requires a local copy of the Pfam data files, which
 can be obtained from the Pfam FTP area:
 
   ftp://ftp.sanger.ac.uk/pub/database/Pfam/current_release/
@@ -316,13 +316,13 @@ documentation for details). The significance value is 1 if the bit score for a
 hit is greater than or equal to the curated gathering threshold for the
 matching family, 0 otherwise. Pfam-B hits are always assigned a significance
 value of "NA", since Pfam-B families do not have curated thresholds and the
-value is therefore meaningless. 
+value is therefore meaningless.
 
 =head1 REFERENCES
 
-Active site residues are predicted using the method described in the publication: 
+Active site residues are predicted using the method described in the publication:
 
-Mistry J., Bateman A., Finn R.D. "Predicting active site residue annotations in 
+Mistry J., Bateman A., Finn R.D. "Predicting active site residue annotations in
 the Pfam database." BMC Bioinformatics. 2007;8:298. PMID:17688688.
 
 =head1 AUTHORS
@@ -351,6 +351,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 or see the on-line version at http://www.gnu.org/copyleft/gpl.txt
- 
+
 =cut
 

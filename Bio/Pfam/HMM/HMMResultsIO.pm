@@ -32,17 +32,17 @@ Authors: Rob Finn (rdf@sanger.ac.uk), John Tate (jt6@sanger.ac.uk)
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  or see the on-line version at http://www.gnu.org/copyleft/gpl.txt
- 
+
 =cut
 
 use strict;
@@ -93,24 +93,24 @@ has 'scores' => (
 
 =head2 parseHMMER3
 
-  Title    : parseHMMER 
+  Title    : parseHMMER
   Usage    : $hmmResIO->parseHMMSearch( filename )
-  Function : Parse the output from a HMMER3 search results 
-  Args     : Filename containing the search 
+  Function : Parse the output from a HMMER3 search results
+  Args     : Filename containing the search
   Returns  : A Bio::Pfam::HMM::HMMResults object
-  
+
 =cut
 
 sub parseHMMER3 {
   my ( $self, $filename ) = @_;
   my $fh;
- 
+
   if(ref($filename) eq 'GLOB'){
     $fh = $filename;
   }else{
     open( $fh, $filename ) or confess "Could not open $filename:[$!]\n";
   }
-  
+
 #  open( $fh, $filename ) or confess "Could not open $filename:[$!]\n";
   my $hmmRes = Bio::Pfam::HMM::HMMResults->new;
   $self->_readHeader( $fh, $hmmRes );
@@ -125,20 +125,20 @@ sub parseHMMER3 {
 sub parseMultiHMMER3 {
   my ( $self, $filename ) = @_;
   my $fh;
-  
+
   if(ref($filename) eq 'GLOB'){
     $fh = $filename;
   }elsif( ref($filename) and $filename->isa('IO::File') ) {
       $fh = $filename;
   }else{
     open( $fh, $filename ) or confess "Could not open $filename:[$!]\n";
-  }  
-  
+  }
+
   my @hmmResAll;
   my $program;
   while(!eof($fh)){
     my $hmmRes = Bio::Pfam::HMM::HMMResults->new;
-    my $eof = $self->_readHeader( $fh, $hmmRes ); 
+    my $eof = $self->_readHeader( $fh, $hmmRes );
     last if($eof);
     push(@hmmResAll, $hmmRes);
     if($hmmRes->program) {
@@ -156,9 +156,9 @@ sub parseMultiHMMER3 {
 
 sub parseSplitHMMER3 {
   my($self, $files ) = @_;
-  
+
   my $hmmRes = Bio::Pfam::HMM::HMMResults->new;
-  
+
   foreach my $filename (@{$files}){
     my ($fh);
     open( $fh, $filename ) or confess "Could not open $filename:[$!]\n";
@@ -167,23 +167,23 @@ sub parseSplitHMMER3 {
     $self->_readUnitHits( $fh, $hmmRes );
     $self->_readFooter($fh, $hmmRes);
   }
-  
+
   return ( $hmmRes );
-    
+
 }
 
 
 #-------------------------------------------------------------------------------
 
-=head2 convertHMMSearch 
+=head2 convertHMMSearch
 
   Title    : convertHMMSearch
-  Usage    : $hmmResIO->convertHMMSearch('SEARCHFILE') 
-  Function : This wraps up a couple of methods to convert the more complex hmmsearch 
-           : results in to nice clean format that we Pfam-ers are used to. 
-  Args     : The filename of the hmmsearch output file
+  Usage    : $hmmResIO->convertHMMSearch('SEARCHFILE')
+  Function : This wraps up a couple of methods to convert the more complex hpc_hmmsearch
+           : results in to nice clean format that we Pfam-ers are used to.
+  Args     : The filename of the hpc_hmmsearch output file
   Returns  : Nothing
-  
+
 =cut
 
 sub convertHMMSearch {
@@ -204,14 +204,14 @@ sub convertHMMSearch {
 
 #-------------------------------------------------------------------------------
 
-=head2 writePFAMOUT 
+=head2 writePFAMOUT
 
   Title    : writePFAMOUT
-  Usage    : $hmmResIO->writePFAMOUT( $hmmRes ) 
-  Function : Writes a Bio::Pfam::HMM:HMMResults object in to a PFAMOUT file. 
+  Usage    : $hmmResIO->writePFAMOUT( $hmmRes )
+  Function : Writes a Bio::Pfam::HMM:HMMResults object in to a PFAMOUT file.
   Args     : A Bio::Pfam::HMM:HMMResults
   Returns  : Nothing
-  
+
 =cut
 
 sub writePFAMOUT {
@@ -236,8 +236,8 @@ sub writePFAMOUT {
 # Sequence scores
 # ---------------
 #
-# name      description                                   bits      evalue   n   exp  bias  
- 
+# name      description                                   bits      evalue   n   exp  bias
+
 HEAD
 
   foreach
@@ -269,8 +269,8 @@ HEAD
 HEAD
 
   foreach my $dom ( sort { $b->bits <=> $a->bits } @{ $hmmRes->units } ) {
-    
-    
+
+
     printf $fh (
       "%-10s  %6d  %6d  %6d  %6d  %6s  %6s %6.1f  %9s %6d %6.1f\n",
       $dom->name,
@@ -291,15 +291,15 @@ HEAD
 
 #-------------------------------------------------------------------------------
 
-=head2 parsePFAMOUT 
+=head2 parsePFAMOUT
 
   Title    : parsePFAMOUT
   Usage    : $self->parsePFAMOUT($filename)
   Function : Reads in a PFAMOUT file.  This file contains the minimal amount of information
-           : require to constrcut a pfam ALIGN file.   
+           : require to constrcut a pfam ALIGN file.
   Args     : A filename. Normally this is filename
   Returns  : A Bio::Pfam::HMM::HMMResults object
-  
+
 =cut
 
 sub parsePFAMOUT {
@@ -324,7 +324,7 @@ sub parsePFAMOUT {
 
     #if (/^(\S+)\s+(.*?)\s+(\S+)\s+(\S+)\s+(\d+)\s*$/) {
     if (/^(\S+)\s+(.*?)\s+(\S+)\s+(\S+)\s+(\d+)\s+\S+\s+(\S+)\s*$/) {
-      
+
       $hmmRes->addHMMSeq(
         Bio::Pfam::HMM::HMMSequence->new(
           {
@@ -384,14 +384,14 @@ sub parsePFAMOUT {
 
 #-------------------------------------------------------------------------------
 
-=head2 _readHeader 
+=head2 _readHeader
 
   Title    : _readHeader
   Usage    : Private method.  $self->_readHeader(\*FH, $hmmResults)
-  Function : Reads the header section from a HMMER3 hmmsearch   
-  Args     : The file handle to hmmsearch output, a Bio::Pfam::HMM::HMMResults object
+  Function : Reads the header section from a HMMER3 hpc_hmmsearch
+  Args     : The file handle to hpc_hmmsearch output, a Bio::Pfam::HMM::HMMResults object
   Returns  : Nothing
-  
+
 =cut
 
 #Parse the header part of the output first;
@@ -417,7 +417,7 @@ sub _readHeader {
       $hmmRes->seedName($1);
       $hmmRes->hmmLength($2);
     }elsif(/^Query:\s+(\S+)\s+\[L\=(\d+)\]/) {
-	$hmmRes->seqName($1); 
+	$hmmRes->seqName($1);
       $hmmRes->seqLength($2);
     }elsif (/^sequence E-value threshold: <= (\d+)/) {
       $hmmRes->evalueThr($1);
@@ -425,31 +425,31 @@ sub _readHeader {
     elsif (/^# Random generator seed:      (\d+)/) {
       $hmmRes->randSeedNum($1);
     }elsif(/^Description:\s+(.*)/){
-      $hmmRes->description($1);  
-    }elsif(/^# (phmmer|hmmsearch|hmmscan|jackhmmer)/){
+      $hmmRes->description($1);
+    }elsif(/^# (phmmer|hpc_hmmsearch|hmmsearch|hmmscan|jackhmmer)/){
       $hmmRes->program($1);
     }elsif (/(^#)|(^$)/) {
       next;
     }elsif(/^Accession/){
-      next; 
+      next;
     } elsif(/^\[ok\]/) {
       return(1);
     } else {
-      die "Failed to parse hmmsearch results |$_| in header section\n";
+      die "Failed to parse hpc_hmmsearch results |$_| in header section\n";
     }
   }
 }
 
 #-------------------------------------------------------------------------------
 
-=head2 _readSeqHits 
+=head2 _readSeqHits
 
   Title    : _readSeqHits
   Usage    : Private method.  $self->_readSeqHits(\*FH, $hmmResults)
-  Function : Reads the sequence hits from a HMMER3 hmmsearch   
-  Args     : The file handle to hmmsearch output, a Bio::Pfam::HMM::HMMResults object
+  Function : Reads the sequence hits from a HMMER3 hpc_hmmsearch
+  Args     : The file handle to hpc_hmmsearch output, a Bio::Pfam::HMM::HMMResults object
   Returns  : Nothing
-  
+
 =cut
 
 sub _readSeqHits {
@@ -498,7 +498,6 @@ sub _readSeqHits {
           }
         )
       );
-      
       next;
     }
     die "Failed to parse $_ in sequence section\n";
@@ -508,23 +507,23 @@ sub _readSeqHits {
 
 #------------------------------------------------------------------------------
 
-=head2 _readUnitHits 
+=head2 _readUnitHits
 
   Title    : _readUnitHits
   Usage    : Private method.  $self->_readUnitHits(\*FH, $hmmResults)
-  Function : Reads the unit (domain) hits from a HMMER3 hmmsearch   
-  Args     : The file handle to hmmsearch output, a Bio::Pfam::HMM::HMMResults object
+  Function : Reads the unit (domain) hits from a HMMER3 hpc_hmmsearch
+  Args     : The file handle to hpc_hmmsearch output, a Bio::Pfam::HMM::HMMResults object
   Returns  : Nothing
-  
+
 =cut
 
 no warnings 'recursion';
 
 sub _readUnitHits {
   my ( $self, $hs, $hmmRes ) = @_;
-  
+
   if($hmmRes->eof){
-    return; 
+    return;
   }
 
 #Parse the domain hits section
@@ -545,10 +544,10 @@ sub _readUnitHits {
       last;
     }
     elsif (/\>\>\s+(\S+)/) {
-      my $seqId = $1;    
+      my $seqId = $1;
       $self->_readUnitData( $seqId, $hs, $hmmRes );
       if($hmmRes->eof){
-        return; 
+        return;
       }
     }
   }
@@ -556,9 +555,9 @@ sub _readUnitHits {
 
 sub _readUnitData {
   my ( $self, $id, $hs, $hmmRes ) = @_;
-  
+
   if($hmmRes->eof){
-    return; 
+    return;
   }
   my $hmmName = $hmmRes->seedName();
 
@@ -629,7 +628,7 @@ sub _readUnitData {
           }
         )
       );
-      
+
       next;
     }
     elsif(/^\s+\[No individual domains/) {
@@ -650,7 +649,7 @@ sub _readUnitData {
 # OR....
 #
 #  == domain 1    score: 27.6 bits;  conditional E-value: 7.4e-10
-#   PF00018  17 LsfkkGdvitvleksee.eWwkaelkdg.keGlvPsnYvep 55 
+#   PF00018  17 LsfkkGdvitvleksee.eWwkaelkdg.keGlvPsnYvep 55
 #               L++++Gd+++++++++e++Ww++++++++++G++P+n+v+p
 #  P15498.4 617 LRLNPGDIVELTKAEAEqNWWEGRNTSTnEIGWFPCNRVKP 657
 #               7899**********9999*******************9987 PP
@@ -659,7 +658,7 @@ sub _readUnitData {
   if ($align) {
     my ($pattern1, $pattern2);
 
-    if($hmmName and $hmmRes->program eq 'hmmsearch'){
+    if($hmmName and $hmmRes->program eq 'hpc_hmmsearch'){
       $pattern1 = qr/^\s+$hmmName\s+\d+\s+(\S+)\s+\d+/;
       $id =~ s/(\W)/\\$1/g; # escape any non-word character
       # $id =~ s/\|/\\|/g;  #Escape '|', '[' and ']' characters
@@ -670,7 +669,7 @@ sub _readUnitData {
       my $tmpSeqName = $seqName;
       $tmpSeqName =~ s/(\W)/\\$1/g; # escape any non-word character
       # $tmpSeqName =~ s/\|/\\|/g; #Escape '|', '[' and ']' characters
-      # $tmpSeqName =~ s/\[/\\[/g;  
+      # $tmpSeqName =~ s/\[/\\[/g;
       # $tmpSeqName =~ s/\]/\\]/g;
       $pattern1 = qr/^\s+$id\s+\d+\s+(\S+)\s+\d+/;
       $pattern2 = qr/^\s+$tmpSeqName\s+\d+\s+(\S+)\s+\d+/;
@@ -682,7 +681,7 @@ sub _readUnitData {
       $pattern1 = qr/^\s+$seqName\s+\d+\s+(\S+)\s+\d+/;
       $pattern2 = qr/^\s+$id\s+\d+\s+(\S+)\s+\d+/;
     }
-  
+
 
     $recurse = 0;
     my $matchNo;
@@ -730,7 +729,7 @@ sub _readUnitData {
         $recurse   = 1;
         last;
       }
-     
+
       else {
         confess("Did not parse |$_| in units");
       }
@@ -740,7 +739,7 @@ sub _readUnitData {
   foreach my $u (@units) {
     $hmmRes->addHMMUnit($u);
   }
-      
+
   $hmmRes->eof($eof);
 
   if ($recurse and $nextSeqId) {
@@ -752,144 +751,6 @@ use warnings 'recursion';
 
 #-------------------------------------------------------------------------------
 
-=head2 parseHMMER2 
-
-  Title    : parseHMMER2
-  Usage    : $self->parseHMMER2(\*FH )
-  Function : This is a minimal parser for reading in the output of HMMER2 hmmsearch   
-  Args     : The file handle to hmmsearch output
-  Returns  : A Bio::Pfam::HMM::HMMResults object
-  
-=cut
-
-sub parseHMMER2 {
-  my $self = shift;
-  my $file = shift;
-
-  my $hmmRes = Bio::Pfam::HMM::HMMResults->new;
-
-  my %seqh;
-  my $count = 0;
-
-  while (<$file>) {
-    /^Scores for complete sequences/ && last;
-  }
-
-  while (<$file>) {
-    /^Parsed for domains/ && last;
-    if ( my ( $id, $de, $sc, $ev, $hits ) =
-      /^(\S+)\s+(.*?)\s+(\S+)\s+(\S+)\s+(\d+)\s*$/ )
-    {
-      $hmmRes->addHMMSeq(
-        Bio::Pfam::HMM::HMMSequence->new(
-          {
-            bits       => $sc,
-            evalue     => $ev,
-            name       => $id,
-            desc       => $de,
-            numberHits => $hits
-          }
-        )
-      );
-
-      $seqh{$id} = $sc;
-    }
-  }
-
-  while (<$file>) {
-    /^Histogram of all scores/ && last;
-    if ( my ( $id, $sqfrom, $sqto, $hmmf, $hmmt, $sc, $ev ) =
-      /^(\S+)\s+\S+\s+(\d+)\s+(\d+).+?(\d+)\s+(\d+)\s+\S+\s+(\S+)\s+(\S+)\s*$/ )
-    {
-      $hmmRes->addHMMUnit(
-        Bio::Pfam::HMM::HMMUnit->new(
-          {
-            name    => $id,
-            seqFrom => $sqfrom,
-            seqTo   => $sqto,
-            hmmFrom => $hmmf,
-            hmmTo   => $hmmt,
-            bits    => $sc,
-            evalue  => $ev
-          }
-        )
-      );
-
-    }
-  }
-
-  return $hmmRes;
-}
-
-#-------------------------------------------------------------------------------
-
-=head2 parseHMMER1
-
-  Title    : parseHMMER1
-  Usage    : $self->parseHMMER1(\*FH )
-  Function : This is a minimal parser for reading in the output of HMMER1 hmmsearch.
-           : There are a few hacks to get round some of them requirements     
-  Args     : The file handle to hmmsearch output
-  Returns  : A Bio::Pfam::HMM::HMMResults object
-  
-=cut
-
-sub parseHMMER1 {
-  my $self = shift;
-  my $file = shift;
-
-  my $hmmRes = Bio::Pfam::HMM::HMMResults->new;
-
-  my %seqh;
-  my $count = 0;
-
-  while (<$file>) {
-    if ( my ( $bits, $s, $e, $id, $de ) =
-/^(-?\d+\.?\d*)\s+\(bits\)\s+f:\s+(\d+)\s+t:\s+(\d+)\s+Target:\s+(\S+)\s+(.*)/
-      )
-    {
-      if ( $id =~ /(\S+)\/(\d+)-(\d+)/ ) {
-        $id = $1;
-        $s  = $2 + $s - 1;
-        $e  = $2 + $e - 1;
-      }
-
-      if ( !$hmmRes->seqs->{$id} ) {
-        $hmmRes->addHMMSeq(
-          Bio::Pfam::HMM::HMMSequence->new(
-            {
-              bits       => $bits,
-              evalue     => 1,
-              name       => $id,
-              desc       => $de,
-              numberHits => 1
-            }
-          )
-        );
-      }
-      $hmmRes->addHMMUnit(
-        Bio::Pfam::HMM::HMMUnit->new(
-          {
-            name    => $id,
-            seqFrom => $s,
-            seqTo   => $e,
-            hmmFrom => "1",
-            hmmTo   => "1",
-            bits    => $bits,
-            evalue  => "1"
-          }
-        )
-      );
-      if ( $bits > $hmmRes->seqs->{$id}->bits ) {
-        $hmmRes->seqs->{$id}->bits($bits);
-      }
-    }
-  }
-  return $hmmRes;
-}
-
-#-------------------------------------------------------------------------------
-
 =head2 writeScoresFile
 
   Title    : writeScoresFile
@@ -897,7 +758,7 @@ sub parseHMMER1 {
   Function : Writes a scores file for a Bio::Pfam::HMM::HMMResults object.
   Args     : Bio::Pfam::HMM::HMMResults
   Returns  : Nothing
-  
+
 =cut
 
 sub writeScoresFile {
@@ -987,11 +848,11 @@ sub writeScoresFile {
 =head2 _readAlign
 
   Title    :
-  Usage    :  
+  Usage    :
   Function :
   Args     :
   Returns  :
-  
+
 =cut
 
 sub _readAlign {
@@ -1012,9 +873,9 @@ sub _readAlign {
 
 sub _readFooter {
   my($self, $fh, $hmmRes ) = @_;
- 
-  # We are going to parse something like this! 
-    
+
+  # We are going to parse something like this!
+
   #  Internal pipeline statistics summary:
 #-------------------------------------
 #Query sequence(s):                         1  (360 residues)
@@ -1026,7 +887,7 @@ sub _readFooter {
 #Domain search space  (domZ):               1  [number of targets reported over threshold]
 ## CPU time: 0.00u 0.00s 00:00:00.00 Elapsed: 00:00:00
 ## Mc/sec: inf
-#//  
+#//
 
   while(<$fh>){
     if(/\/\//){
@@ -1069,13 +930,13 @@ sub write_ascii_out {
 
 
     $scanData->{_max_seqname} = 20 unless($scanData->{_max_seqname} or $scanData->{_max_seqname} < 1);
-    
+
     my $ga;
 
     if($e_seq or $e_dom) {
 	$e_seq = $e_dom unless($e_seq);
 	$e_dom = "10" unless($e_dom);
-    } 
+    }
     elsif($b_seq or $b_dom) {
 	$b_seq = $b_dom unless($b_seq);
 	$b_dom = "0" unless($b_dom);
@@ -1085,7 +946,7 @@ sub write_ascii_out {
     }
 
 
-    foreach my $unit ( sort { $a->seqFrom <=> $b->seqFrom } @{ $HMMResults->units } ) {    
+    foreach my $unit ( sort { $a->seqFrom <=> $b->seqFrom } @{ $HMMResults->units } ) {
 
         if($unit->name =~ /Pfam\-B/) {
 
@@ -1121,13 +982,13 @@ sub write_ascii_out {
 		next unless($HMMResults->seqs->{$unit->name}->evalue <= $e_seq and $unit->evalue <= $e_dom);
 	    }
 	    if($b_seq) {
-		
+
 		next unless($HMMResults->seqs->{$unit->name}->bits >= $b_seq and $unit->bits >= $b_dom);
 	    }
-	    
+
 	    my $clan = $scanData->{_clanmap}->{ $unit->name } || "No_clan";
-	    
-	    
+
+
 	    printf $fh "%-".$scanData->{_max_seqname}."s %6d %6d %6d %6d %-11s %-16s %7s %5d %5d %5d %8s %9s %3d %-8s ",
 	    $HMMResults->seqName,
 	    $unit->seqFrom,
@@ -1142,21 +1003,21 @@ sub write_ascii_out {
 	    $scanData->{_model_len}->{ $unit->name },
 	    $unit->bits,
 	    $unit->evalue,
-	    $unit->sig, 
+	    $unit->sig,
 	    $clan;
-	
-	    
+
+
 	    if($unit->{'act_site'}) {
 		local $" = ",";
 		print $fh "predicted_active_site[@{$unit->{'act_site'}}]";
 	    }
-	
+
 	    if($scanData->{_translate}){
 	      my $strand = '?';
 	      my $start = '-';
 	      my $end   = '-';
 	      if(exists($scanData->{_orf}->{$HMMResults->seqName})){
-	       $strand = $scanData->{_orf}->{$HMMResults->seqName}->{strand};  
+	       $strand = $scanData->{_orf}->{$HMMResults->seqName}->{strand};
 	       if($strand eq '+'){
 	         $start = $scanData->{_orf}->{$HMMResults->seqName}->{start} + ($unit->envFrom * 3) - 3;
 	         $end = $scanData->{_orf}->{$HMMResults->seqName}->{start} + ($unit->envTo * 3) - 3;
@@ -1167,7 +1028,7 @@ sub write_ascii_out {
 	      }
 	      print $fh "$strand $start $end";
 	    }
-	
+
 	    print $fh "\n";
 	}
 
@@ -1178,9 +1039,9 @@ sub write_ascii_out {
 	    print $fh sprintf( "%-10s %s\n", "#SEQ",   $unit->hmmalign->{seq});
 	    print $fh sprintf( "%-10s %s\n", "#CS",   $unit->hmmalign->{cs}) if($unit->hmmalign->{cs});
 	}
-	
+
     }
-    
+
 }
 
 1;

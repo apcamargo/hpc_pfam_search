@@ -21,14 +21,10 @@ sub new {
   my $self = $class->SUPER::new( %params );  # this is Bio::Pfam::Root
                       # so we have to set Bio::LocatableSeq fields ourself
 
-
-
-
   $self->id( $id );
   $self->start( $start );
   $self->end( $end );
   $self->seq( $seq );
-
 
   return $self; # success - we hope!
 }
